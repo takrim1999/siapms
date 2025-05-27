@@ -1,59 +1,150 @@
-# SiapmsFrontend
+# SIAPMS - Simple Project Showcase Management System
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+A fullstack application for showcasing projects with Angular frontend and Express.js backend.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- 🔐 User authentication (register/login)
+- 📁 Project CRUD operations
+- 🖼️ Image upload (cover photos and screenshots)
+- 🌐 Public/private project visibility
+- 🔍 Project search and filtering
+- 📱 Responsive design with Tailwind CSS
 
-```bash
+## Tech Stack
+
+### Frontend
+- Angular 18+
+- Tailwind CSS v4
+- TypeScript
+- RxJS
+
+### Backend
+- Node.js
+- Express.js
+- JWT Authentication
+- Multer (file uploads)
+- bcryptjs (password hashing)
+
+## Getting Started
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+\`\`\`bash
+cd siapms-backend
+\`\`\`
+
+2. Install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
+
+3. Create uploads directory:
+\`\`\`bash
+mkdir uploads
+\`\`\`
+
+4. Copy environment variables:
+\`\`\`bash
+cp .env.example .env
+\`\`\`
+
+5. Update the `.env` file with your configuration
+
+6. Start the development server:
+\`\`\`bash
+npm run dev
+\`\`\`
+
+The backend will run on `http://localhost:3000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+\`\`\`bash
+cd siapms-frontend
+\`\`\`
+
+2. Install dependencies:
+\`\`\`bash
+npm install
+\`\`\`
+
+3. Start the development server:
+\`\`\`bash
 ng serve
-```
+\`\`\`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The frontend will run on `http://localhost:4200`
 
-## Code scaffolding
+## API Endpoints
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/me` - Get current user
 
-```bash
-ng generate component component-name
-```
+### Projects
+- `GET /api/projects` - Get all public projects
+- `GET /api/projects/:id` - Get project by ID
+- `GET /api/projects/user` - Get user's projects (authenticated)
+- `POST /api/projects` - Create new project (authenticated)
+- `PUT /api/projects/:id` - Update project (authenticated)
+- `DELETE /api/projects/:id` - Delete project (authenticated)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Project Structure
 
-```bash
-ng generate --help
-```
+\`\`\`
+siapms/
+├── siapms-frontend/          # Angular frontend
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/   # Reusable components
+│   │   │   ├── pages/        # Page components
+│   │   │   ├── services/     # Angular services
+│   │   │   ├── models/       # TypeScript interfaces
+│   │   │   └── guards/       # Route guards
+│   │   └── styles.css        # Global styles with Tailwind
+│   └── package.json
+└── siapms-backend/           # Express backend
+    ├── routes/               # API routes
+    ├── middleware/           # Custom middleware
+    ├── data/                 # Data storage (JSON files)
+    ├── utils/                # Utility functions
+    ├── uploads/              # File uploads directory
+    └── package.json
+\`\`\`
 
-## Building
+## Usage
 
-To build the project run:
+1. **Register/Login**: Create an account or login to access project management features
+2. **Browse Projects**: View all public projects on the projects page
+3. **Create Project**: Add new projects with title, description, images, and links
+4. **Manage Projects**: Edit or delete your own projects
+5. **Public/Private**: Toggle project visibility for public showcase
 
-```bash
-ng build
-```
+## Security Features
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- JWT-based authentication
+- Password hashing with bcryptjs
+- File upload validation
+- Rate limiting
+- CORS protection
+- Helmet security headers
 
-## Running unit tests
+## Contributing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-```bash
-ng test
-```
+## License
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is licensed under the MIT License.

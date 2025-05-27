@@ -1,69 +1,53 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
+import { Injectable } from "@angular/core"
+import { HttpClient } from "@angular/common/http"
+import { BehaviorSubject, type Observable, tap } from "rxjs"
+import type { User } from "../models/project.model"
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private apiUrl = "http://localhost:3000/api"
+  private currentUserSubject = new BehaviorSubject<User | null>(null)
+  public currentUser$ = this.currentUserSubject.asObservable()
 
   constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+    this.loadUserFromStorage()
+  }
+
+  private loadUserFromStorage(): void {
+    const token = localStorage.getItem("token")
+    const user = localStorage.getItem("user")
+    if (token && user) {
+      this.currentUserSubject.next(JSON.parse(user))
     }
   }
 
-  register(username: string, email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, {
-      username,
-      email,
-      password
-    }).pipe(
-      tap(response => this.handleAuthResponse(response))
-    );
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+      tap((response: any) => {
+        localStorage.setItem("token", response.token)
+        localStorage.setItem("user", JSON.stringify(response.user))
+        this.currentUserSubject.next(response.user)
+      }),
+    )
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, {
-      email,
-      password
-    }).pipe(
-      tap(response => this.handleAuthResponse(response))
-    );
+  register(username: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, { username, email, password })
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    this.currentUserSubject.next(null)
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    return !!localStorage.getItem("token")
   }
 
-  private handleAuthResponse(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('currentUser', JSON.stringify(response.user));
-    this.currentUserSubject.next(response.user);
+  getToken(): string | null {
+    return localStorage.getItem("token")
   }
-} 
+}
