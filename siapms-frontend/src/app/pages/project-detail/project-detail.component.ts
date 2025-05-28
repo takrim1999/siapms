@@ -28,8 +28,8 @@ import type { Project, User } from "../../models/project.model"
       </div>
       <!-- Creator Chip -->
       <div *ngIf="project.author" class="flex items-center gap-2 mb-6 bg-white rounded-full px-3 py-1 shadow w-fit">
-        <a [routerLink]="['/profile', project.author.username]" class="flex items-center gap-2 text-decoration-none" (click)="navigateToProfile(project.author.username)">
-          <img *ngIf="project.author.profilePicture" [src]="getImageUrl(project.author.profilePicture || '')" alt="Creator Avatar" class="w-6 h-6 rounded-full object-cover border" />
+        <a [routerLink]="['/profile', project.author.username]" class="flex items-center gap-2 text-decoration-none">
+          <img *ngIf="project.author.profilePicture" [src]="getImageUrl(project.author.profilePicture)" alt="Creator Avatar" class="w-6 h-6 rounded-full object-cover border" />
           <span class="text-sm font-medium">{{project.author.username}}</span>
         </a>
         <span class="bg-danger text-white rounded-pill px-2 py-1 text-xs fw-semibold ms-1">Creator</span>
@@ -206,7 +206,7 @@ export class ProjectDetailComponent implements OnInit {
 
   checkOwnership(): void {
     if (this.project && this.currentUser) {
-      this.isOwner = this.project.userId === this.currentUser.id
+      this.isOwner = this.project.author._id === this.currentUser._id
     }
   }
 
@@ -220,7 +220,7 @@ export class ProjectDetailComponent implements OnInit {
 
   editProject(): void {
     if (this.project) {
-      this.router.navigate(["/edit-project", this.project.id])
+      this.router.navigate(["/edit-project", this.project._id])
     }
   }
 
@@ -230,7 +230,7 @@ export class ProjectDetailComponent implements OnInit {
     const confirmed = confirm("Are you sure you want to delete this project? This action cannot be undone.")
 
     if (confirmed) {
-      this.projectService.deleteProject(this.project.id).subscribe({
+      this.projectService.deleteProject(this.project._id).subscribe({
         next: () => {
           alert("Project deleted successfully")
           this.router.navigate(["/projects"])
@@ -254,10 +254,7 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   getImageUrl(path: string): string {
+    if (!path) return '/placeholder.svg?height=100&width=100';
     return `http://localhost:3000/${path}`;
-  }
-
-  navigateToProfile(username: string): void {
-    this.router.navigate(['/profile', username]);
   }
 }

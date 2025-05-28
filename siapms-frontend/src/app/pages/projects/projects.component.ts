@@ -46,7 +46,7 @@ import type { Project } from "../../models/project.model"
               <h5 class="card-title">{{project.title}}</h5>
               <p class="card-text text-truncate">{{project.description}}</p>
               <div class="mt-auto d-flex justify-content-between align-items-center">
-                <a [routerLink]="['/projects', project.id]" class="btn btn-primary btn-sm">View Details</a>
+                <a [routerLink]="['/projects', project._id]" class="btn btn-primary btn-sm">View Details</a>
                 <div class="d-flex gap-3">
                   <a *ngIf="project.githubLink" [href]="project.githubLink" target="_blank" class="text-dark" title="GitHub">
                     <i class="bi bi-github fs-4"></i>

@@ -1,34 +1,29 @@
 export interface Project {
-  id: string
-  _id?: string
+  _id: string
   title: string
   description: string
-  coverPhoto: string
+  coverPhoto?: string
   screenshots: string[]
-  githubLink: string
-  liveLink: string
+  githubLink?: string
+  liveLink?: string
   isPublic: boolean
-  userId: string
+  author: User
   createdAt: string
   updatedAt: string
-  author?: {
-    username: string
-    profilePicture?: string
-    bio?: string
-  }
 }
 
 export interface User {
-  id: string
+  _id: string
   username: string
   email: string
-  createdAt: string
+  profilePicture?: string
   bio?: string
   website?: string
   twitter?: string
   linkedin?: string
   github?: string
-  profilePicture?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface CreateProjectRequest {
