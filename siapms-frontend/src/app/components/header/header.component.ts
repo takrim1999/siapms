@@ -27,7 +27,7 @@ import type { User } from "../../models/project.model"
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <ng-container *ngIf="currentUser; else authButtons">
               <li class="nav-item d-flex align-items-center">
-                <a class="nav-link fw-bold text-primary" routerLink="/profile" style="cursor:pointer;">Welcome, {{currentUser.username}}</a>
+                <a class="nav-link fw-bold text-primary" [routerLink]="['/profile', currentUser.username]" style="cursor:pointer;">Welcome, {{currentUser.username}}</a>
               </li>
               <li class="nav-item">
                 <button (click)="logout()" class="btn btn-outline-secondary ms-2">Logout</button>

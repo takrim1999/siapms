@@ -55,10 +55,10 @@ import type { Project, User } from "../../models/project.model"
         
         <!-- Action buttons for project owner -->
         <div *ngIf="isOwner" class="flex space-x-2">
-          <button (click)="editProject()" class="btn-secondary">
+          <button (click)="editProject()" class="btn btn-success">
             Edit Project
           </button>
-          <button (click)="deleteProject()" class="btn btn-danger">
+          <button (click)="deleteProject()" class="btn btn-danger m-2">
             Delete
           </button>
         </div>
