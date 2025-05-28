@@ -11,6 +11,11 @@ export interface Project {
   userId: string
   createdAt: string
   updatedAt: string
+  author?: {
+    username: string
+    profilePicture?: string
+    bio?: string
+  }
 }
 
 export interface User {

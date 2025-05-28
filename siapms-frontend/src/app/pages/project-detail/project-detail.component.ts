@@ -22,10 +22,19 @@ import type { Project, User } from "../../models/project.model"
     </div>
 
     <div *ngIf="project" class="max-w-4xl mx-auto">
+      <!-- Creator Profile Section -->
+      <div class="flex flex-col gap-2 mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-1">{{project.title}}</h1>
+        <div class="flex items-center gap-2 mb-2" *ngIf="project.author">
+          <img *ngIf="project.author?.profilePicture" [src]="getImageUrl(project.author?.profilePicture || '')" alt="Creator Avatar" class="w-8 h-8 rounded-full object-cover border" />
+          <span class="font-medium text-primary">
+            <a [routerLink]="['/profile']" class="hover:underline">{{project.author?.username}}</a>
+          </span>
+        </div>
+      </div>
       <!-- Header -->
       <div class="flex justify-between items-start mb-8">
         <div>
-          <h1 class="text-4xl font-bold text-gray-900 mb-2">{{project.title}}</h1>
           <div class="flex items-center space-x-4 text-sm text-gray-500">
             <span>Created: {{formatDate(project.createdAt)}}</span>
             <span *ngIf="project.updatedAt !== project.createdAt">
@@ -50,11 +59,14 @@ import type { Project, User } from "../../models/project.model"
 
       <!-- Cover Image -->
       <div *ngIf="project.coverPhoto" class="mb-8">
-        <img 
-          [src]="getImageUrl(project.coverPhoto)" 
-          [alt]="project.title + ' cover'"
-          class="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
-        >
+        <div class="w-full aspect-[3/1] bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+          <img 
+            [src]="getImageUrl(project.coverPhoto)" 
+            [alt]="project.title + ' cover'"
+            class="w-full h-full object-cover rounded-lg"
+            style="max-height: 320px;"
+          >
+        </div>
       </div>
 
       <!-- Description -->
@@ -95,19 +107,20 @@ import type { Project, User } from "../../models/project.model"
         </div>
       </div>
 
-      <!-- Screenshots -->
+      <!-- Screenshots Carousel -->
       <div *ngIf="project.screenshots && project.screenshots.length > 0" class="mb-8">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">Screenshots</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="flex overflow-x-auto gap-4 pb-2">
           <div 
             *ngFor="let screenshot of project.screenshots; let i = index" 
-            class="cursor-pointer"
+            class="flex-shrink-0 cursor-pointer"
+            style="width: 180px; height: 120px;"
             (click)="openImageModal(screenshot, i)"
           >
             <img 
               [src]="getImageUrl(screenshot)" 
               [alt]="'Screenshot ' + (i + 1)"
-              class="w-full h-48 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             >
           </div>
         </div>
