@@ -27,12 +27,17 @@ import type { Project, User } from "../../models/project.model"
         <h1 class="text-4xl font-bold text-gray-900 mb-1">{{project.title}}</h1>
       </div>
       <!-- Creator Chip -->
-      <div *ngIf="project.author" class="flex items-center gap-2 mb-6 bg-white rounded-full px-3 py-1 shadow w-fit">
-        <a [routerLink]="['/profile', project.author.username]" class="flex items-center gap-2 text-decoration-none">
-          <img *ngIf="project.author.profilePicture" [src]="getImageUrl(project.author.profilePicture)" alt="Creator Avatar" class="w-6 h-6 rounded-full object-cover border" />
-          <span class="text-sm font-medium">{{project.author.username}}</span>
+      <div *ngIf="project.author" class="d-flex align-items-center gap-2 mb-3">
+        <a [routerLink]="['/profile', project.author.username]" class="text-decoration-none d-flex align-items-center gap-2">
+          <img 
+            *ngIf="project.author.profilePicture" 
+            [src]="getImageUrl(project.author.profilePicture)" 
+            [alt]="project.author.username"
+            class="rounded-circle"
+            style="width: 24px; height: 24px; object-fit: cover;"
+          />
+          <span class="text-muted small">by {{project.author.username}}</span>
         </a>
-        <span class="bg-danger text-white rounded-pill px-2 py-1 text-xs fw-semibold ms-1">Creator</span>
       </div>
       <!-- Header -->
       <div class="flex justify-between items-start mb-8">

@@ -42,9 +42,9 @@ import type { User } from "../../models/project.model"
               </li>
             </ng-template>
           </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
   `,
 })
 export class HeaderComponent implements OnInit {
