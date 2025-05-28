@@ -187,7 +187,7 @@ export class CreateProjectComponent {
     this.projectService.createProject(this.projectData).subscribe({
       next: (project) => {
         this.loading = false
-        this.router.navigate(["/projects", project.id])
+        this.router.navigate(["/projects", project._id])
       },
       error: (error) => {
         this.loading = false
