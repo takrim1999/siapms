@@ -23,7 +23,12 @@ router.get('/', async (req, res) => {
     const projects = await Project.find({ isPublic: true })
       .populate('author', 'username')
       .sort({ createdAt: -1 });
-    res.json(projects);
+    const projectsWithId = projects.map(project => {
+      const obj = project.toObject();
+      obj.id = obj._id;
+      return obj;
+    });
+    res.json(projectsWithId);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching projects', error: error.message });
   }
@@ -34,7 +39,12 @@ router.get('/my-projects', auth, async (req, res) => {
   try {
     const projects = await Project.find({ author: req.userId })
       .sort({ createdAt: -1 });
-    res.json(projects);
+    const projectsWithId = projects.map(project => {
+      const obj = project.toObject();
+      obj.id = obj._id;
+      return obj;
+    });
+    res.json(projectsWithId);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching projects', error: error.message });
   }
