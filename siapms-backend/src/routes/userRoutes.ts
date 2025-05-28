@@ -1,5 +1,6 @@
 import express from 'express';
-import User from '../../models/User';
+import { IUser } from '../models/User';
+import User from '../models/User';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';

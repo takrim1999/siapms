@@ -60,7 +60,7 @@ const projectSchema = new mongoose.Schema({
 
 // Update the updatedAt timestamp before saving
 projectSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
+  this.updatedAt = new Date();
   next();
 });
 
