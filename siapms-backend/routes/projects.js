@@ -85,7 +85,7 @@ router.post('/', auth, upload.fields([
 // Get project by ID
 router.get('/:id', async (req, res) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id).populate('author', 'username profilePicture bio');
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
