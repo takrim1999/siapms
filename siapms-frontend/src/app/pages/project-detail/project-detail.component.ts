@@ -51,7 +51,7 @@ import type { Project, User } from "../../models/project.model"
       <!-- Cover Image -->
       <div *ngIf="project.coverPhoto" class="mb-8">
         <img 
-          [src]="project.coverPhoto" 
+          [src]="getImageUrl(project.coverPhoto)" 
           [alt]="project.title + ' cover'"
           class="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
         >
@@ -105,7 +105,7 @@ import type { Project, User } from "../../models/project.model"
             (click)="openImageModal(screenshot, i)"
           >
             <img 
-              [src]="screenshot" 
+              [src]="getImageUrl(screenshot)" 
               [alt]="'Screenshot ' + (i + 1)"
               class="w-full h-48 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             >
@@ -236,5 +236,9 @@ export class ProjectDetailComponent implements OnInit {
   closeImageModal(): void {
     this.selectedImage = null
     this.selectedImageIndex = 0
+  }
+
+  getImageUrl(path: string): string {
+    return `http://localhost:3000/${path}`;
   }
 }
