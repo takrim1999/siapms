@@ -10,6 +10,7 @@ const auth = (req, res, next) => {
 
     const verified = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     req.user = verified;
+    req.userId = verified.userId;
     next();
   } catch (error) {
     res.status(401).json({ message: 'Token verification failed, authorization denied' });

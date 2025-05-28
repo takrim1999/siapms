@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const Project = require('../models/Project');
+const auth = require('../middleware/auth');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -15,18 +16,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-// Middleware to verify JWT token
-const auth = (req, res, next) => {
-  try {
-    const token = req.header('Authorization').replace('Bearer ', '');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    req.userId = decoded.userId;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Please authenticate' });
-  }
-};
 
 // Get all public projects
 router.get('/', async (req, res) => {
@@ -58,12 +47,15 @@ router.post('/', auth, upload.fields([
 ]), async (req, res) => {
   try {
     const { title, description, githubLink, liveLink, isPublic } = req.body;
-    
+
+    const coverPhoto = req.files.coverPhoto ? req.files.coverPhoto[0].path : null;
+    const screenshots = req.files.screenshots ? req.files.screenshots.map(file => file.path) : [];
+
     const project = new Project({
       title,
       description,
-      coverPhoto: req.files.coverPhoto[0].path,
-      screenshots: req.files.screenshots.map(file => file.path),
+      coverPhoto,
+      screenshots,
       githubLink,
       liveLink,
       isPublic: isPublic === 'true',

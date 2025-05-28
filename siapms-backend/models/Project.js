@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema({
   },
   coverPhoto: {
     type: String,
-    required: true
+    required: false
   },
   screenshots: [{
     type: String
