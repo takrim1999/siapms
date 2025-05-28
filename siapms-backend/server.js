@@ -22,9 +22,11 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/siapms')
 // Routes
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
+const userRoutes = require('./routes/users');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/users', userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

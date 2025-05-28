@@ -24,6 +24,30 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  website: {
+    type: String,
+    default: ''
+  },
+  twitter: {
+    type: String,
+    default: ''
+  },
+  linkedin: {
+    type: String,
+    default: ''
+  },
+  github: {
+    type: String,
+    default: ''
+  },
+  profilePicture: {
+    type: String,
+    default: ''
   }
 });
 
