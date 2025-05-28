@@ -60,7 +60,7 @@ router.post('/', auth, upload.fields([
 
     const coverPhoto = req.files.coverPhoto ? req.files.coverPhoto[0].path : null;
     const screenshots = req.files.screenshots ? req.files.screenshots.map(file => file.path) : [];
-
+    
     const project = new Project({
       title,
       description,
