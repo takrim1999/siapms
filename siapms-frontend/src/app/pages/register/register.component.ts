@@ -17,27 +17,27 @@ import { AuthService } from "../../services/auth.service"
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
               <input type="text" id="username" [(ngModel)]="username" name="username" class="form-control" required placeholder="Choose a username">
-            </div>
+          </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
               <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" required placeholder="Enter your email">
-            </div>
+          </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
               <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required placeholder="Create a password">
-            </div>
+          </div>
             <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirm Password</label>
               <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required placeholder="Confirm your password">
-            </div>
+          </div>
             <button type="submit" [disabled]="loading" class="btn btn-primary w-100">
-              {{loading ? 'Creating Account...' : 'Create Account'}}
-            </button>
-          </form>
+            {{loading ? 'Creating Account...' : 'Create Account'}}
+          </button>
+        </form>
           <p class="text-center text-muted mt-3">
-            Already have an account?
+          Already have an account? 
             <a routerLink="/login">Login here</a>
-          </p>
+        </p>
         </div>
       </div>
     </div>

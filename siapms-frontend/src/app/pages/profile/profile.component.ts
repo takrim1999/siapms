@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { ProfileService } from "../../services/profile.service";
+import { AuthService } from "../../services/auth.service";
 import type { User } from "../../models/project.model";
 
 @Component({
@@ -10,8 +12,45 @@ import type { User } from "../../models/project.model";
   imports: [CommonModule, FormsModule],
   template: `
     <div class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded shadow">
-      <h1 class="text-2xl font-bold mb-4">Your Profile</h1>
-      <form (ngSubmit)="onSubmit()" *ngIf="user">
+      <h1 class="text-2xl font-bold mb-4">{{ isOwnProfile ? 'Your Profile' : user?.username + "'s Profile" }}</h1>
+      
+      <!-- View Mode -->
+      <div *ngIf="user && !isOwnProfile" class="space-y-6">
+        <div class="flex flex-col items-center mb-4">
+          <img
+            *ngIf="user.profilePicture"
+            [src]="getImageUrl(user.profilePicture)"
+            alt="Profile Picture"
+            class="rounded-full w-24 h-24 object-cover mb-2 border"
+          />
+        </div>
+        <div class="mb-3">
+          <label class="block text-sm font-medium mb-1">Username</label>
+          <input class="form-input w-full" [value]="user.username" disabled />
+        </div>
+        <div class="mb-3" *ngIf="user.bio">
+          <label class="block text-sm font-medium mb-1">Bio</label>
+          <p class="text-gray-700">{{ user.bio }}</p>
+        </div>
+        <div class="mb-3" *ngIf="user.website">
+          <label class="block text-sm font-medium mb-1">Website</label>
+          <a [href]="user.website" target="_blank" class="text-blue-600 hover:underline">{{ user.website }}</a>
+        </div>
+        <div class="flex gap-4">
+          <a *ngIf="user.twitter" [href]="user.twitter" target="_blank" class="text-blue-400 hover:text-blue-600">
+            <i class="bi bi-twitter"></i> Twitter
+          </a>
+          <a *ngIf="user.linkedin" [href]="user.linkedin" target="_blank" class="text-blue-700 hover:text-blue-900">
+            <i class="bi bi-linkedin"></i> LinkedIn
+          </a>
+          <a *ngIf="user.github" [href]="user.github" target="_blank" class="text-gray-900 hover:text-gray-700">
+            <i class="bi bi-github"></i> GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <form (ngSubmit)="onSubmit()" *ngIf="user && isOwnProfile">
         <div class="flex flex-col items-center mb-4">
           <img
             *ngIf="profilePicturePreview || user.profilePicture"
@@ -62,19 +101,42 @@ export class ProfileComponent implements OnInit {
   loading = false;
   profilePictureFile: File | null = null;
   profilePicturePreview: string | null = null;
+  isOwnProfile = false;
 
-  constructor(private profileService: ProfileService) {}
+  constructor(
+    private profileService: ProfileService,
+    private authService: AuthService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
-    this.profileService.getProfile().subscribe({
-      next: (user) => {
-        this.user = user;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      },
+    this.route.params.subscribe(params => {
+      const username = params['username'];
+      if (username) {
+        // Viewing another user's profile
+        this.profileService.getUserProfile(username).subscribe({
+          next: (user) => {
+            this.user = user;
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          },
+        });
+      } else {
+        // Viewing own profile
+        this.isOwnProfile = true;
+        this.profileService.getProfile().subscribe({
+          next: (user) => {
+            this.user = user;
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          },
+        });
+      }
     });
   }
 
