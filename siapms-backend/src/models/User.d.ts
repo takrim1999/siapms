@@ -9,12 +9,4 @@ export interface IUser extends Document {
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
-}
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: IUser;
-    }
-  }
 } 
