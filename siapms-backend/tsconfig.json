@@ -12,11 +12,8 @@
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node", "express"],
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationDir": "./dist/types",
     "allowJs": true,
-    "checkJs": false,
-    "emitDeclarationOnly": true
+    "checkJs": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

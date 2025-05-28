@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc && tsc-alias",
-    "postinstall": "tsc && tsc-alias",
+    "build": "tsc",
+    "postinstall": "tsc",
     "test": "jest"
   },
   "keywords": [],
