@@ -1,6 +1,5 @@
 import express from 'express';
-import { IProject } from '../models/Project';
-import Project from '../models/Project';
+import Project from '../../models/Project';
 import { auth } from '../middleware/auth';
 import multer from 'multer';
 import path from 'path';

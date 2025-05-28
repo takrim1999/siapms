@@ -7,7 +7,7 @@ import type { User } from "../models/project.model"
   providedIn: "root",
 })
 export class AuthService {
-  private apiUrl = "https://siapms-back.onrender.com/api"
+  private apiUrl = "http://localhost:3000/api"
   private currentUserSubject = new BehaviorSubject<User | null>(null)
   public currentUser$ = this.currentUserSubject.asObservable()
 

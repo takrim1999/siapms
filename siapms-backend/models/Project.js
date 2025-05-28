@@ -1,18 +1,4 @@
-import mongoose, { Document } from 'mongoose';
-import { IUser } from './User';
-
-export interface IProject extends Document {
-  title: string;
-  description: string;
-  coverPhoto?: string;
-  screenshots: string[];
-  githubLink?: string;
-  liveLink?: string;
-  isPublic: boolean;
-  author: IUser;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
   title: {
@@ -60,10 +46,8 @@ const projectSchema = new mongoose.Schema({
 
 // Update the updatedAt timestamp before saving
 projectSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
+  this.updatedAt = Date.now();
   next();
 });
 
-const Project = mongoose.model<IProject>('Project', projectSchema);
-
-export default Project; 
+module.exports = mongoose.model('Project', projectSchema); 
