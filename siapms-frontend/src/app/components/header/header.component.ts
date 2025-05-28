@@ -9,31 +9,42 @@ import type { User } from "../../models/project.model"
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="bg-white shadow-sm border-b">
-      <nav class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-8">
-            <a routerLink="/" class="text-2xl font-bold text-blue-600">SIAPMS</a>
-            <div class="hidden md:flex space-x-6">
-              <a routerLink="/projects" class="text-gray-600 hover:text-blue-600 transition-colors">Projects</a>
-              <a *ngIf="currentUser" routerLink="/create-project" class="text-gray-600 hover:text-blue-600 transition-colors">Create Project</a>
-            </div>
-          </div>
-          
-          <div class="flex items-center space-x-4">
-            <div *ngIf="currentUser; else authButtons" class="flex items-center space-x-4">
-              <span class="text-gray-700">Welcome, {{currentUser.username}}</span>
-              <button (click)="logout()" class="btn-secondary">Logout</button>
-            </div>
-            
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-primary" routerLink="/">SIAPMS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/projects">Projects</a>
+            </li>
+            <li class="nav-item" *ngIf="currentUser">
+              <a class="nav-link" routerLink="/create-project">Create Project</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ng-container *ngIf="currentUser; else authButtons">
+              <li class="nav-item d-flex align-items-center">
+                <span class="nav-link">Welcome, {{currentUser.username}}</span>
+              </li>
+              <li class="nav-item">
+                <button (click)="logout()" class="btn btn-outline-secondary ms-2">Logout</button>
+              </li>
+            </ng-container>
             <ng-template #authButtons>
-              <a routerLink="/login" class="text-gray-600 hover:text-blue-600 transition-colors">Login</a>
-              <a routerLink="/register" class="btn-primary">Register</a>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-primary ms-2" routerLink="/register">Register</a>
+              </li>
             </ng-template>
-          </div>
+          </ul>
         </div>
-      </nav>
-    </header>
+      </div>
+    </nav>
   `,
 })
 export class HeaderComponent implements OnInit {

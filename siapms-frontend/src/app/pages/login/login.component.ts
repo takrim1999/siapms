@@ -9,50 +9,28 @@ import { AuthService } from "../../services/auth.service"
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div class="max-w-md mx-auto">
-      <div class="bg-white p-8 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold text-center text-gray-900 mb-6">Login to SIAPMS</h1>
-        
-        <form (ngSubmit)="onSubmit()" class="space-y-4">
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              [(ngModel)]="email" 
-              name="email"
-              class="form-input" 
-              required
-              placeholder="Enter your email"
-            >
-          </div>
-
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              [(ngModel)]="password" 
-              name="password"
-              class="form-input" 
-              required
-              placeholder="Enter your password"
-            >
-          </div>
-
-          <button 
-            type="submit" 
-            [disabled]="loading"
-            class="w-full btn-primary disabled:opacity-50"
-          >
-            {{loading ? 'Logging in...' : 'Login'}}
-          </button>
-        </form>
-
-        <p class="text-center text-sm text-gray-600 mt-4">
-          Don't have an account? 
-          <a routerLink="/register" class="text-blue-600 hover:text-blue-800">Register here</a>
-        </p>
+    <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+      <div class="card shadow" style="width: 100%; max-width: 400px;">
+        <div class="card-body">
+          <h1 class="card-title text-center mb-4">Login to SIAPMS</h1>
+          <form (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" required placeholder="Enter your email">
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required placeholder="Enter your password">
+            </div>
+            <button type="submit" [disabled]="loading" class="btn btn-primary w-100">
+              {{loading ? 'Logging in...' : 'Login'}}
+            </button>
+          </form>
+          <p class="text-center text-muted mt-3">
+            Don't have an account?
+            <a routerLink="/register">Register here</a>
+          </p>
+        </div>
       </div>
     </div>
   `,
