@@ -1,20 +1,20 @@
+import dotenv from 'dotenv';
+// Load environment variables first
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import path from 'path';
-import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes';
 import projectRoutes from './routes/projectRoutes';
 import authRoutes from './routes/authRoutes';
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 
 // CORS Configuration
 const allowedOrigins = [
-  'https://siapms.vercel.app',
+  process.env.FRONTEND_URL || 'https://siapms.vercel.app',
   'http://localhost:4200'  // For local development
 ];
 
@@ -47,10 +47,17 @@ app.get('/health', (req, res) => {
 });
 
 // Connect to MongoDB
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/siapms';
-mongoose.connect(MONGO_URI)
+if (!process.env.MONGO_URI) {
+  console.error('❌ MONGO_URI is not defined in environment variables');
+  process.exit(1);
+}
+
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
-  .catch(err => console.error('❌ MongoDB connection failed:', err));
+  .catch(err => {
+    console.error('❌ MongoDB connection failed:', err);
+    process.exit(1);
+  });
 
 // Start server
 const PORT = process.env.PORT || 3000;
