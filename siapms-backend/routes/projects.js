@@ -63,9 +63,26 @@ router.post('/', auth, upload.fields([
     });
 
     await project.save();
-    res.status(201).json(project);
+    const projectObj = project.toObject();
+    projectObj.id = projectObj._id;
+    res.status(201).json(projectObj);
   } catch (error) {
     res.status(500).json({ message: 'Error creating project', error: error.message });
+  }
+});
+
+// Get project by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    const projectObj = project.toObject();
+    projectObj.id = projectObj._id;
+    res.json(projectObj);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching project', error: error.message });
   }
 });
 
