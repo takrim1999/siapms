@@ -13,19 +13,19 @@ import type { Project } from "../../models/project.model"
     <div class="container-fluid">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-5 fw-bold">All Projects</h1>
-        <input 
-          type="text" 
-          placeholder="Search projects..." 
+          <input 
+            type="text" 
+            placeholder="Search projects..." 
           class="form-control w-auto"
-          [(ngModel)]="searchTerm"
-          (input)="filterProjects()"
-        >
-      </div>
+            [(ngModel)]="searchTerm"
+            (input)="filterProjects()"
+          >
+        </div>
 
       <div *ngIf="loading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
-        </div>
+      </div>
         <p class="mt-2 text-secondary">Loading projects...</p>
       </div>
 
@@ -65,7 +65,7 @@ import type { Project } from "../../models/project.model"
                 <div class="d-flex gap-3">
                   <a *ngIf="project.githubLink" [href]="project.githubLink" target="_blank" class="text-dark" title="GitHub">
                     <i class="bi bi-github fs-4"></i>
-                  </a>
+                </a>
                   <a *ngIf="project.liveLink" [href]="project.liveLink" target="_blank" class="text-success" title="Live Demo">
                     <i class="bi bi-box-arrow-up-right fs-4"></i>
                   </a>

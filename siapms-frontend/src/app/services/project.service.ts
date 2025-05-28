@@ -8,7 +8,7 @@ import { AuthService } from "./auth.service"
   providedIn: "root",
 })
 export class ProjectService {
-  private apiUrl = "http://localhost:3000/api"
+  private apiUrl = "https://siapms-back.onrender.com/api"
 
   constructor(
     private http: HttpClient,

@@ -1,12 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { IUser } from '../models/User';
 import User from '../../models/User';
 
-interface AuthRequest extends Request {
-  user?: any;
+interface JwtPayload {
+  id: string;
 }
 
-export const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+declare global {
+  namespace Express {
+    interface Request {
+      user: IUser;
+    }
+  }
+}
+
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
@@ -14,8 +23,8 @@ export const auth = async (req: AuthRequest, res: Response, next: NextFunction) 
       throw new Error();
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    const user = await User.findOne({ _id: (decoded as any)._id });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       throw new Error();
@@ -24,6 +33,6 @@ export const auth = async (req: AuthRequest, res: Response, next: NextFunction) 
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Please authenticate' });
+    res.status(401).json({ error: 'Please authenticate.' });
   }
 }; 
