@@ -47,12 +47,12 @@ import type { Project } from "../../models/project.model"
               <p class="card-text text-truncate">{{project.description}}</p>
               <div class="mt-auto d-flex justify-content-between align-items-center">
                 <a [routerLink]="['/projects', project.id]" class="btn btn-primary btn-sm">View Details</a>
-                <div class="d-flex gap-2">
-                  <a *ngIf="project.githubLink" [href]="project.githubLink" target="_blank" class="text-secondary" title="GitHub">
-                    <i class="bi bi-github fs-5"></i>
+                <div class="d-flex gap-3">
+                  <a *ngIf="project.githubLink" [href]="project.githubLink" target="_blank" class="text-dark" title="GitHub">
+                    <i class="bi bi-github fs-4"></i>
                   </a>
-                  <a *ngIf="project.liveLink" [href]="project.liveLink" target="_blank" class="text-secondary" title="Live Site">
-                    <i class="bi bi-box-arrow-up-right fs-5"></i>
+                  <a *ngIf="project.liveLink" [href]="project.liveLink" target="_blank" class="text-success" title="Live Demo">
+                    <i class="bi bi-box-arrow-up-right fs-4"></i>
                   </a>
                 </div>
               </div>
