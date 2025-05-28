@@ -77,6 +77,7 @@ router.post('/', auth, upload.fields([
     projectObj.id = projectObj._id;
     res.status(201).json(projectObj);
   } catch (error) {
+    console.error('Error creating project:', error);
     res.status(500).json({ message: 'Error creating project', error: error.message });
   }
 });
