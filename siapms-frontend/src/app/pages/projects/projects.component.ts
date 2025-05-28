@@ -45,6 +45,21 @@ import type { Project } from "../../models/project.model"
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{project.title}}</h5>
               <p class="card-text text-truncate">{{project.description}}</p>
+              
+              <!-- Creator Info -->
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <a [routerLink]="['/profile', project.author.username]" class="text-decoration-none d-flex align-items-center gap-2">
+                  <img 
+                    *ngIf="project.author.profilePicture" 
+                    [src]="getImageUrl(project.author.profilePicture)" 
+                    [alt]="project.author.username"
+                    class="rounded-circle"
+                    style="width: 24px; height: 24px; object-fit: cover;"
+                  />
+                  <span class="text-muted small">by {{project.author.username}}</span>
+                </a>
+              </div>
+
               <div class="mt-auto d-flex justify-content-between align-items-center">
                 <a [routerLink]="['/projects', project._id]" class="btn btn-primary btn-sm">View Details</a>
                 <div class="d-flex gap-3">
@@ -98,7 +113,8 @@ export class ProjectsComponent implements OnInit {
     this.filteredProjects = this.projects.filter(
       (project) =>
         project.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        project.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        project.author.username.toLowerCase().includes(this.searchTerm.toLowerCase()),
     )
   }
 
