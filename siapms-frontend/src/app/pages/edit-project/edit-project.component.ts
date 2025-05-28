@@ -1,14 +1,16 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { ProjectService } from "../../services/project.service";
 import type { Project, CreateProjectRequest } from "../../models/project.model";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { MarkdownEditorComponent } from "../../components/markdown-editor/markdown-editor.component";
 
 @Component({
   selector: "app-edit-project",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, MarkdownEditorComponent],
   template: `
     <div class="max-w-4xl mx-auto mt-8 p-6 bg-white rounded shadow">
       <div *ngIf="loading" class="text-center py-8">
@@ -39,14 +41,15 @@ import type { Project, CreateProjectRequest } from "../../models/project.model";
 
         <!-- Description -->
         <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            [(ngModel)]="project.description"
-            name="description"
-            rows="4"
-            class="form-input w-full"
-            required
-          ></textarea>
+          <label for="description" class="form-label">Description</label>
+          <app-markdown-editor
+            [value]="project.description"
+            (valueChange)="onDescriptionChange($event)"
+          ></app-markdown-editor>
+          <div *ngIf="projectForm.get('description')?.errors?.['required'] && projectForm.get('description')?.touched" 
+               class="text-red-500 text-sm mt-1">
+            Description is required
+          </div>
         </div>
 
         <!-- Cover Photo -->
@@ -161,12 +164,18 @@ export class EditProjectComponent implements OnInit {
   coverPhotoFile: File | null = null;
   coverPhotoPreview: string | null = null;
   newScreenshots: File[] = [];
+  projectForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService
-  ) {}
+    private projectService: ProjectService,
+    private formBuilder: FormBuilder
+  ) {
+    this.projectForm = this.formBuilder.group({
+      description: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -182,6 +191,9 @@ export class EditProjectComponent implements OnInit {
     this.projectService.getProjectById(id).subscribe({
       next: (project) => {
         this.project = project;
+        this.projectForm.patchValue({
+          description: project.description
+        });
         this.loading = false;
       },
       error: () => {
@@ -250,5 +262,12 @@ export class EditProjectComponent implements OnInit {
         alert('Error updating project. Please try again.');
       },
     });
+  }
+
+  onDescriptionChange(value: string): void {
+    if (this.project) {
+      this.project.description = value;
+      this.projectForm.get('description')?.setValue(value);
+    }
   }
 } 

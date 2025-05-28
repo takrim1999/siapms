@@ -4,6 +4,14 @@ import { ActivatedRoute, Router, RouterModule } from "@angular/router"
 import { ProjectService } from "../../services/project.service"
 import { AuthService } from "../../services/auth.service"
 import type { Project, User } from "../../models/project.model"
+import { marked } from 'marked';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
+// Configure marked options
+marked.setOptions({
+  breaks: true,
+  gfm: true
+});
 
 @Component({
   selector: "app-project-detail",
@@ -79,9 +87,7 @@ import type { Project, User } from "../../models/project.model"
       <!-- Description -->
       <div class="mb-8">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">About This Project</h2>
-        <div class="prose prose-lg max-w-none">
-          <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{project.description}}</p>
-        </div>
+        <div class="prose prose-lg max-w-none markdown-content" [innerHTML]="getMarkdownHtml(project.description)"></div>
       </div>
 
       <!-- Links -->
@@ -163,6 +169,44 @@ import type { Project, User } from "../../models/project.model"
       </div>
     </div>
   `,
+  styles: [`
+    .markdown-content {
+      @apply text-gray-700 leading-relaxed;
+    }
+    .markdown-content h1 {
+      @apply text-3xl font-bold mb-4;
+    }
+    .markdown-content h2 {
+      @apply text-2xl font-bold mb-3;
+    }
+    .markdown-content h3 {
+      @apply text-xl font-bold mb-2;
+    }
+    .markdown-content p {
+      @apply mb-4;
+    }
+    .markdown-content ul, .markdown-content ol {
+      @apply mb-4 ml-6;
+    }
+    .markdown-content li {
+      @apply mb-2;
+    }
+    .markdown-content code {
+      @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+    }
+    .markdown-content pre {
+      @apply bg-gray-100 p-4 rounded-lg mb-4 overflow-x-auto;
+    }
+    .markdown-content blockquote {
+      @apply border-l-4 border-gray-300 pl-4 italic my-4;
+    }
+    .markdown-content a {
+      @apply text-blue-600 hover:text-blue-800 underline;
+    }
+    .markdown-content img {
+      @apply max-w-full h-auto rounded-lg my-4;
+    }
+  `]
 })
 export class ProjectDetailComponent implements OnInit, AfterViewInit {
   @ViewChild('carousel') carouselElement!: ElementRef;
@@ -177,6 +221,7 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit {
     private router: Router,
     private projectService: ProjectService,
     private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -279,5 +324,12 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit {
   getImageUrl(path: string): string {
     if (!path) return '/placeholder.svg?height=100&width=100';
     return `http://localhost:3000/${path}`;
+  }
+
+  getMarkdownHtml(markdown: string): SafeHtml {
+    if (!markdown) return '';
+    // Use marked.parse synchronously
+    const html = marked.parse(markdown, { async: false }) as string;
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }
