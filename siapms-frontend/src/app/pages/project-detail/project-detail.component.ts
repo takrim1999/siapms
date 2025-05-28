@@ -1,4 +1,4 @@
-import { Component, type OnInit } from "@angular/core"
+import { Component, type OnInit, AfterViewInit, ElementRef, ViewChild } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { ActivatedRoute, Router, RouterModule } from "@angular/router"
 import { ProjectService } from "../../services/project.service"
@@ -117,42 +117,41 @@ import type { Project, User } from "../../models/project.model"
       <!-- Screenshots Carousel -->
       <div *ngIf="project.screenshots && project.screenshots.length > 0" class="mb-8">
         <h2 class="text-2xl font-semibold text-gray-900 mb-4">Screenshots</h2>
-        <div class="flex overflow-x-auto gap-4 pb-2">
-          <div 
-            *ngFor="let screenshot of project.screenshots; let i = index" 
-            class="flex-shrink-0 cursor-pointer"
-            style="width: 180px; height: 120px;"
-            (click)="openImageModal(screenshot, i)"
-          >
-            <img 
-              [src]="getImageUrl(screenshot)" 
-              [alt]="'Screenshot ' + (i + 1)"
-              class="w-full h-full object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-          </div>
-        </div>
-      </div>
+        <div #carousel id="screenshotsCarousel" class="carousel slide" data-ride="carousel">
+          <!-- Indicators -->
+          <ol class="carousel-indicators">
+            <li *ngFor="let screenshot of project.screenshots; let i = index" 
+                [attr.data-target]="'#screenshotsCarousel'" 
+                [attr.data-slide-to]="i"
+                [class.active]="i === 0">
+            </li>
+          </ol>
 
-      <!-- Image Modal -->
-      <div 
-        *ngIf="selectedImage" 
-        class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-        (click)="closeImageModal()"
-      >
-        <div class="max-w-4xl max-h-full p-4">
-          <img 
-            [src]="selectedImage" 
-            [alt]="'Screenshot ' + (selectedImageIndex + 1)"
-            class="max-w-full max-h-full object-contain"
-          >
-          <div class="text-center mt-4">
-            <button 
-              (click)="closeImageModal()"
-              class="bg-white text-gray-900 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
-            >
-              Close
-            </button>
+          <!-- Slides -->
+          <div class="carousel-inner">
+            <div *ngFor="let screenshot of project.screenshots; let i = index" 
+                 class="carousel-item" 
+                 [class.active]="i === 0">
+              <img [src]="getImageUrl(screenshot)" 
+                   [alt]="'Screenshot ' + (i + 1)"
+                   class="d-block w-100 rounded-lg"
+                   style="max-height: 500px; object-fit: contain; background-color: #f8f9fa;">
+            </div>
           </div>
+
+          <!-- Controls -->
+          <a class="carousel-control-prev" href="#screenshotsCarousel" role="button" data-slide="prev" 
+             (click)="$event.preventDefault(); previousSlide()" 
+             style="background: rgba(0, 0, 0, 0.6); width: 50px; height: 50px; border-radius: 50%; top: 50%; transform: translateY(-50%);">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#screenshotsCarousel" role="button" data-slide="next"
+             (click)="$event.preventDefault(); nextSlide()"
+             style="background: rgba(0, 0, 0, 0.6); width: 50px; height: 50px; border-radius: 50%; top: 50%; transform: translateY(-50%);">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
         </div>
       </div>
 
@@ -165,13 +164,13 @@ import type { Project, User } from "../../models/project.model"
     </div>
   `,
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent implements OnInit, AfterViewInit {
+  @ViewChild('carousel') carouselElement!: ElementRef;
   project: Project | null = null
   loading = true
   currentUser: User | null = null
   isOwner = false
-  selectedImage: string | null = null
-  selectedImageIndex = 0
+  private carousel: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -192,6 +191,35 @@ export class ProjectDetailComponent implements OnInit {
         this.loadProject(projectId)
       }
     })
+  }
+
+  ngAfterViewInit() {
+    // Initialize carousel after view is initialized
+    setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        const bootstrap = (window as any).bootstrap;
+        if (bootstrap) {
+          this.carousel = new bootstrap.Carousel(this.carouselElement.nativeElement, {
+            interval: 5000,
+            keyboard: true,
+            pause: 'hover',
+            wrap: true
+          });
+        }
+      }
+    }, 0);
+  }
+
+  previousSlide() {
+    if (this.carousel) {
+      this.carousel.prev();
+    }
+  }
+
+  nextSlide() {
+    if (this.carousel) {
+      this.carousel.next();
+    }
   }
 
   loadProject(id: string): void {
@@ -246,16 +274,6 @@ export class ProjectDetailComponent implements OnInit {
         },
       })
     }
-  }
-
-  openImageModal(image: string, index: number): void {
-    this.selectedImage = image
-    this.selectedImageIndex = index
-  }
-
-  closeImageModal(): void {
-    this.selectedImage = null
-    this.selectedImageIndex = 0
   }
 
   getImageUrl(path: string): string {

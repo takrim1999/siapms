@@ -26,88 +26,128 @@ import type { User } from "../../models/project.model";
       <div *ngIf="user && !loading" class="space-y-6">
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-bold">{{ isOwnProfile ? 'Your Profile' : user.username + "'s Profile" }}</h1>
-          <button *ngIf="isOwnProfile" (click)="toggleEditMode()" class="btn-secondary">
+          <button *ngIf="isOwnProfile" (click)="toggleEditMode()" class="btn btn-primary">
             {{ isEditMode ? 'Cancel Edit' : 'Edit Profile' }}
           </button>
         </div>
 
         <!-- View Mode -->
-        <div *ngIf="!isEditMode" class="space-y-6">
-          <div class="flex flex-col items-center mb-4">
-            <img
-              *ngIf="user.profilePicture"
-              [src]="getImageUrl(user.profilePicture)"
-              alt="Profile Picture"
-              class="rounded-full w-24 h-24 object-cover mb-2 border"
-            />
+        <div *ngIf="!isEditMode" class="flex gap-8">
+          <!-- Left Side - Profile Picture -->
+          <div class="flex-shrink-0">
+            <div class="relative w-48 h-48">
+              <img
+                *ngIf="user.profilePicture"
+                [src]="getImageUrl(user.profilePicture)"
+                alt="Profile Picture"
+                class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+              />
+              <div *ngIf="!user.profilePicture" class="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+                <span class="text-6xl text-gray-400">{{user.username.charAt(0).toUpperCase()}}</span>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Username</label>
-            <input class="form-input w-full" [value]="user.username" disabled />
-          </div>
-          <div class="mb-3" *ngIf="user.bio">
-            <label class="block text-sm font-medium mb-1">Bio</label>
-            <p class="text-gray-700">{{ user.bio }}</p>
-          </div>
-          <div class="mb-3" *ngIf="user.website">
-            <label class="block text-sm font-medium mb-1">Website</label>
-            <a [href]="user.website" target="_blank" class="text-blue-600 hover:underline">{{ user.website }}</a>
-          </div>
-          <div class="flex gap-4">
-            <a *ngIf="user.twitter" [href]="user.twitter" target="_blank" class="text-blue-400 hover:text-blue-600">
-              <i class="bi bi-twitter"></i> Twitter
-            </a>
-            <a *ngIf="user.linkedin" [href]="user.linkedin" target="_blank" class="text-blue-700 hover:text-blue-900">
-              <i class="bi bi-linkedin"></i> LinkedIn
-            </a>
-            <a *ngIf="user.github" [href]="user.github" target="_blank" class="text-gray-900 hover:text-gray-700">
-              <i class="bi bi-github"></i> GitHub
-            </a>
+
+          <!-- Right Side - Information -->
+          <div class="flex-grow">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{user.username}}</h2>
+            
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
+              <div *ngIf="user.bio" class="mb-4">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Bio</h3>
+                <p class="text-gray-700 leading-relaxed">{{ user.bio }}</p>
+              </div>
+
+              <div *ngIf="user.website" class="mb-4">
+                <h3 class="text-sm font-medium text-gray-500 mb-2">Website</h3>
+                <a [href]="user.website" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                  {{ user.website }}
+                </a>
+              </div>
+
+              <div class="flex gap-4">
+                <a *ngIf="user.twitter" [href]="user.twitter" target="_blank" 
+                  class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-600">
+                  <i class="bi bi-twitter"></i> Twitter
+                </a>
+                <a *ngIf="user.linkedin" [href]="user.linkedin" target="_blank" 
+                  class="inline-flex items-center gap-2 text-blue-700 hover:text-blue-900">
+                  <i class="bi bi-linkedin"></i> LinkedIn
+                </a>
+                <a *ngIf="user.github" [href]="user.github" target="_blank" 
+                  class="inline-flex items-center gap-2 text-gray-900 hover:text-gray-700">
+                  <i class="bi bi-github"></i> GitHub
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Edit Mode -->
-        <form (ngSubmit)="onSubmit()" *ngIf="isEditMode" class="space-y-6">
-          <div class="flex flex-col items-center mb-4">
-            <img
-              *ngIf="profilePicturePreview || user.profilePicture"
-              [src]="profilePicturePreview || getImageUrl(user.profilePicture)"
-              alt="Profile Picture"
-              class="rounded-full w-24 h-24 object-cover mb-2 border"
-            />
-            <input type="file" (change)="onProfilePictureChange($event)" accept="image/*" class="mt-2" />
+        <form (ngSubmit)="onSubmit()" *ngIf="isEditMode" class="flex gap-8">
+          <!-- Left Side - Profile Picture -->
+          <div class="flex-shrink-0">
+            <div class="relative w-48 h-48">
+              <img
+                *ngIf="profilePicturePreview || user.profilePicture"
+                [src]="profilePicturePreview || getImageUrl(user.profilePicture)"
+                alt="Profile Picture"
+                class="w-full h-full object-cover rounded-full border-4 border-white shadow-lg"
+              />
+              <div *ngIf="!profilePicturePreview && !user.profilePicture" class="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+                <span class="text-6xl text-gray-400">{{user.username.charAt(0).toUpperCase()}}</span>
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-2 mt-4">
+              <label class="btn btn-outline-primary">
+                Change Photo
+                <input type="file" (change)="onProfilePictureChange($event)" accept="image/*" class="hidden" />
+              </label>
+              <span class="text-sm text-gray-500">Recommended: Square image, max 2MB</span>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Email</label>
-            <input class="form-input w-full" [value]="user.email" disabled />
+
+          <!-- Right Side - Form -->
+          <div class="flex-grow">
+            <div class="bg-white rounded-lg shadow-sm p-6 space-y-4">
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input class="form-control" [value]="user.email" disabled />
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input class="form-control" [(ngModel)]="user.username" name="username" required />
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                <textarea class="form-control" [(ngModel)]="user.bio" name="bio" rows="3" 
+                  placeholder="Tell us about yourself..."></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                <input class="form-control" [(ngModel)]="user.website" name="website" type="url" 
+                  placeholder="https://your-website.com" />
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Twitter</label>
+                <input class="form-control" [(ngModel)]="user.twitter" name="twitter" type="url" 
+                  placeholder="https://twitter.com/username" />
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">LinkedIn</label>
+                <input class="form-control" [(ngModel)]="user.linkedin" name="linkedin" type="url" 
+                  placeholder="https://linkedin.com/in/username" />
+              </div>
+              <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">GitHub</label>
+                <input class="form-control" [(ngModel)]="user.github" name="github" type="url" 
+                  placeholder="https://github.com/username" />
+              </div>
+              <button type="submit" class="btn btn-primary w-full" [disabled]="loading">
+                {{ loading ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Username</label>
-            <input class="form-input w-full" [(ngModel)]="user.username" name="username" required />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Bio</label>
-            <textarea class="form-input w-full" [(ngModel)]="user.bio" name="bio" rows="3"></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Website</label>
-            <input class="form-input w-full" [(ngModel)]="user.website" name="website" type="url" />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">Twitter</label>
-            <input class="form-input w-full" [(ngModel)]="user.twitter" name="twitter" type="url" />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">LinkedIn</label>
-            <input class="form-input w-full" [(ngModel)]="user.linkedin" name="linkedin" type="url" />
-          </div>
-          <div class="mb-3">
-            <label class="block text-sm font-medium mb-1">GitHub</label>
-            <input class="form-input w-full" [(ngModel)]="user.github" name="github" type="url" />
-          </div>
-          <button type="submit" class="btn-primary w-full" [disabled]="loading">
-            {{ loading ? 'Saving...' : 'Save Changes' }}
-          </button>
         </form>
       </div>
     </div>
