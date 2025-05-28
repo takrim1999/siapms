@@ -1,4 +1,18 @@
-const mongoose = require('mongoose');
+import mongoose, { Document } from 'mongoose';
+import { IUser } from './User';
+
+export interface IProject extends Document {
+  title: string;
+  description: string;
+  coverPhoto?: string;
+  screenshots: string[];
+  githubLink?: string;
+  liveLink?: string;
+  isPublic: boolean;
+  author: IUser;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const projectSchema = new mongoose.Schema({
   title: {
@@ -50,4 +64,6 @@ projectSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('Project', projectSchema); 
+const Project = mongoose.model<IProject>('Project', projectSchema);
+
+export default Project; 
