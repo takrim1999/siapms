@@ -6,6 +6,7 @@ import { CreateProjectComponent } from "./pages/create-project/create-project.co
 import { LoginComponent } from "./pages/login/login.component"
 import { RegisterComponent } from "./pages/register/register.component"
 import { AuthGuard } from "./guards/auth.guard"
+import { ProfileComponent } from "./pages/profile/profile.component"
 
 export const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: "create-project", component: CreateProjectComponent, canActivate: [AuthGuard] },
   { path: "login", component: LoginComponent },
   { path: "register", component: RegisterComponent },
+  { path: "profile", component: ProfileComponent },
   { path: "**", redirectTo: "" },
 ]

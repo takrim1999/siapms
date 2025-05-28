@@ -18,6 +18,12 @@ export interface User {
   username: string
   email: string
   createdAt: string
+  bio?: string
+  website?: string
+  twitter?: string
+  linkedin?: string
+  github?: string
+  profilePicture?: string
 }
 
 export interface CreateProjectRequest {
