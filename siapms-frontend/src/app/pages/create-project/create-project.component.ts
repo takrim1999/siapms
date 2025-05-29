@@ -4,11 +4,12 @@ import { FormsModule } from "@angular/forms"
 import { Router } from "@angular/router"
 import { ProjectService } from "../../services/project.service"
 import type { CreateProjectRequest } from "../../models/project.model"
+import { MarkdownEditorComponent } from "../../components/markdown-editor/markdown-editor.component"
 
 @Component({
   selector: "app-create-project",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MarkdownEditorComponent],
   template: `
     <div class="max-w-2xl mx-auto">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Create New Project</h1>
@@ -29,15 +30,10 @@ import type { CreateProjectRequest } from "../../models/project.model"
 
         <div>
           <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-          <textarea 
-            id="description" 
-            [(ngModel)]="projectData.description" 
-            name="description"
-            rows="4" 
-            class="form-input" 
-            required
-            placeholder="Describe your project..."
-          ></textarea>
+          <app-markdown-editor
+            [value]="projectData.description"
+            (valueChange)="onDescriptionChange($event)"
+          ></app-markdown-editor>
         </div>
 
         <div>
@@ -150,6 +146,10 @@ export class CreateProjectComponent {
     private projectService: ProjectService,
     private router: Router,
   ) {}
+
+  onDescriptionChange(value: string): void {
+    this.projectData.description = value;
+  }
 
   onCoverPhotoChange(event: any): void {
     const file = event.target.files[0]
