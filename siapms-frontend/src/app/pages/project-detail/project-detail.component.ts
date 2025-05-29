@@ -75,12 +75,12 @@ marked.setOptions({
       <!-- Cover Image -->
       <div *ngIf="project.coverPhoto" class="mb-8">
         <div class="w-full aspect-[3/1] bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
-          <img 
+        <img 
             [src]="getImageUrl(project.coverPhoto)" 
-            [alt]="project.title + ' cover'"
+          [alt]="project.title + ' cover'"
             class="w-full h-full object-cover rounded-lg"
             style="max-height: 320px;"
-          >
+        >
         </div>
       </div>
 
@@ -139,10 +139,10 @@ marked.setOptions({
                  class="carousel-item" 
                  [class.active]="i === 0">
               <img [src]="getImageUrl(screenshot)" 
-                   [alt]="'Screenshot ' + (i + 1)"
+              [alt]="'Screenshot ' + (i + 1)"
                    class="d-block w-100 rounded-lg"
                    style="max-height: 500px; object-fit: contain; background-color: #f8f9fa;">
-            </div>
+      </div>
           </div>
 
           <!-- Controls -->
